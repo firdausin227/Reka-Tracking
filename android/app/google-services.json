@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "478391684566",
+    "project_id": "barcodetracking-c86a7",
+    "storage_bucket": "barcodetracking-c86a7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478391684566:android:2c7c408b666d2ca4b6a877",
+        "android_client_info": {
+          "package_name": "com.example.rekatracking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbLE-XSFvJF96_5jiCVs_799fwwZENCiM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
