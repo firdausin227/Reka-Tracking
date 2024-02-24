@@ -66,6 +66,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '478391684566',
     projectId: 'barcodetracking-c86a7',
     storageBucket: 'barcodetracking-c86a7.appspot.com',
+    iosClientId:
+        '478391684566-85tmuk8svnv89qsln4hikgpbhdjbnojb.apps.googleusercontent.com',
     iosBundleId: 'com.example.rekatracking',
   );
 
@@ -75,6 +77,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '478391684566',
     projectId: 'barcodetracking-c86a7',
     storageBucket: 'barcodetracking-c86a7.appspot.com',
+    iosClientId:
+        '478391684566-jn48s7foup40i4bai4jmdb3qo1efdkfs.apps.googleusercontent.com',
     iosBundleId: 'com.example.rekatracking.RunnerTests',
   );
 }

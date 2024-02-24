@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:rekatracking/screens/loginpage.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class MobilePage extends StatefulWidget {
+  const MobilePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MobilePage> createState() => _MobilePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MobilePageState extends State<MobilePage> {
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -27,6 +28,7 @@ class _HomePageState extends State<HomePage> {
         items: const [
           Icon(Icons.home),
           Icon(Icons.camera),
+          Icon(Icons.history),
           Icon(Icons.settings),
         ],
       ),
@@ -40,12 +42,15 @@ class _HomePageState extends State<HomePage> {
       case 1:
         return const ScannerContent();
       case 2:
+        return _buildHistoryContent();
+      case 3:
         return _buildSettingsContent();
       default:
         return Container();
     }
   }
 
+// Beranda Navigation
   Widget _buildHomeContent() {
     // Tambahkan konten untuk halaman beranda di sini
     return const Center(
@@ -53,14 +58,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+// Settings Navigation
   Widget _buildSettingsContent() {
     // Tambahkan konten untuk halaman pengaturan di sini
-    return const Center(
-      child: Text('Pengaturan'),
-    );
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        ElevatedButton(
+          child: const Text("Logout"),
+          onPressed: () async {
+            //  await AuthServices.signInWithGoogle();
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const LoginPage1()));
+          },
+        ),
+      ],
+    ));
   }
 }
 
+// Scanner Navigation
 class ScannerContent extends StatefulWidget {
   const ScannerContent({super.key});
 
@@ -97,4 +115,12 @@ class _ScannerContentState extends State<ScannerContent> {
       ),
     );
   }
+}
+
+// History Navigation
+Widget _buildHistoryContent() {
+  // Tambahkan konten untuk halaman beranda di sini
+  return const Center(
+    child: Text('History'),
+  );
 }

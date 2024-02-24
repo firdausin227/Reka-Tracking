@@ -12,7 +12,12 @@
           "package_name": "com.example.rekatracking"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "478391684566-kqqouigqgo39kb5dfkh225r2i147tfmi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAbLE-XSFvJF96_5jiCVs_799fwwZENCiM"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478391684566-kqqouigqgo39kb5dfkh225r2i147tfmi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "478391684566-85tmuk8svnv89qsln4hikgpbhdjbnojb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rekatracking"
+              }
+            }
+          ]
         }
       }
     }
