@@ -1,45 +1,61 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rekatracking/mobilepage.dart';
+import 'package:rekatracking/webpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
-// class AuthServices {
-//   // static FirebaseAuth _auth = FirebaseAuth.instance;
+final GoogleSignIn googleSignIn = GoogleSignIn();
+String? userEmail, name, uid, imageUrl;
 
-//   // // Email & Password Login
-//   // static Future<User> SignUp(String email, String password) async {
-//   //   try {
-//   //     UserCredential result = await _auth.createUserWithEmailAndPassword(
-//   //         email: email, password: password);
-//   //     FirebaseUser firebaseUser = result.User;
+Future<User?> signInWithGoogle(BuildContext context) async {
+  await Firebase.initializeApp();
 
-//   //     return firebaseUser;
-//   //   } catch (e) {
-//   //     print(e.toString());
-//   //     return null;
-//   //   }
-//   // }
+  User? user;
+  FirebaseAuth auth = FirebaseAuth.instance;
 
-//   // static Future<void> signOut() async {
-//   //   _auth.signOut();
-//   // }
+  if (kIsWeb) {
+    GoogleAuthProvider authProvider = GoogleAuthProvider();
 
-//   // static Stream<User> get firebaseUserStream => _auth.authStateChanges();
+    try {
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithPopup(authProvider);
 
-//   // Google Sign In
-//   signInWithGoogle() async {
-//     // begin interactive sign in process
-//     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+      user = userCredential.user;
+    } catch (e) {
+      print(e);
+    }
+  }
+  if (user != null) {
+    uid = user.uid;
+    name = user.displayName;
+    userEmail = user.email;
+    imageUrl = user.photoURL;
 
-//     // obtain auth details from request
-//     final GoogleSignInAuthentication gAuth = await gUser!.authentication;
-//     // create a new credential for user
-//     final credential = GoogleAuthProvider.credential(
-//       accessToken: gAuth.accessToken,
-//       idToken: gAuth.idToken,
-//     );
-//     // sign in
-//     return await FirebaseAuth.instance.signInWithCredential(credential);
-//   }
-// }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('auth', true);
+    print("name: $name");
+    print("userEmail: $userEmail");
+    print("imageUrl: $imageUrl");
+
+    if (kIsWeb) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const WebPage()),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MobilePage()),
+      );
+    }
+  }
+  return user;
+}
 
 class FirebaseService {
   static final FirebaseService _instance = FirebaseService._();
@@ -53,4 +69,33 @@ class FirebaseService {
   DatabaseReference get databaseRef => FirebaseDatabase.instance.reference();
 
   initializeApp({required FirebaseOptions options}) {}
+
+  // Mengambil instance Firestore
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Method untuk menulis data baru
+  Future<void> addBarang(
+    String nomorBarcode,
+    String namaBarang,
+    int jumlahBarang,
+    String keteranganBarang,
+    String statusProsesBarang,
+    String tanggalTarget,
+  ) async {
+    try {
+      CollectionReference barangRef =
+          FirebaseFirestore.instance.collection('barang');
+
+      await barangRef.add({
+        'nomorBarcode': nomorBarcode,
+        'namaBarang': namaBarang,
+        'jumlahBarang': jumlahBarang,
+        'keteranganBarang': keteranganBarang,
+        'statusProsesBarang': statusProsesBarang,
+        'tanggalTarget': tanggalTarget,
+      });
+    } catch (e) {
+      print('Error adding barang: $e');
+    }
+  }
 }

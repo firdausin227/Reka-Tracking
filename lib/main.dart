@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:rekatracking/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:rekatracking/wrapper.dart';
+import 'package:rekatracking/screens/loginpage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyBSddXtAb1kApC9PIGAyurS-G6dLXwOCz8",
+          authDomain: "barcodetracking-c86a7.firebaseapp.com",
+          projectId: "barcodetracking-c86a7",
+          storageBucket: "barcodetracking-c86a7.appspot.com",
+          messagingSenderId: "478391684566",
+          appId: "1:478391684566:web:6c1f9d3c75cdc757b6a877"));
   runApp(const MyApp());
 }
 
@@ -16,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Wrapper(),
+      home: LoginPage1(),
     );
   }
 }

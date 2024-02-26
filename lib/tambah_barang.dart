@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rekatracking/services/firebase_services.dart';
 import 'package:rekatracking/webpage.dart';
 
 class TambahBarangPage extends StatefulWidget {
@@ -18,13 +19,40 @@ class _TambahBarangState extends State<TambahBarangPage> {
   final _namaBarangController = TextEditingController();
   final _jumlahBarangController = TextEditingController();
   final TextEditingController _date = TextEditingController();
+  final statusProsesBarang = TextEditingController();
+  final _keteranganBarangController = TextEditingController();
+
+  String? _selectedStatusBarang;
 
   @override
   void dispose() {
     _nomorBarcodeController.dispose();
     _namaBarangController.dispose();
     _jumlahBarangController.dispose();
+    _keteranganBarangController.dispose();
+    _date.dispose();
     super.dispose();
+  }
+
+  Future<void> _saveData() async {
+    final nomorBarcode = _nomorBarcodeController.text;
+    final namaBarang = _namaBarangController.text;
+    final jumlahBarang = int.parse(_jumlahBarangController.text);
+    final keteranganBarang = _keteranganBarangController.text;
+    final statusProsesBarang = _selectedStatusBarang!;
+    final tanggalTarget = _date.text;
+
+    await FirebaseService().addBarang(
+      nomorBarcode,
+      namaBarang,
+      jumlahBarang,
+      keteranganBarang,
+      statusProsesBarang,
+      tanggalTarget,
+    );
+
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const WebPage()));
   }
 
   @override
@@ -32,10 +60,6 @@ class _TambahBarangState extends State<TambahBarangPage> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        // leading: BackButton(onPressed: () {
-        //   Navigator.pushReplacement(context,
-        //       MaterialPageRoute(builder: (context) => const WebPage()));
-        // }),
         backgroundColor: Colors.blue,
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +135,7 @@ class _TambahBarangState extends State<TambahBarangPage> {
 
                 if (pickeddate != null) {
                   setState(() {
-                    _date.text = DateFormat('dd-MM-yyy').format(pickeddate);
+                    _date.text = DateFormat('dd-MM-yyyy').format(pickeddate);
                   });
                 }
               },
@@ -151,20 +175,7 @@ class _TambahBarangState extends State<TambahBarangPage> {
                 ElevatedButton(
                   style:
                       ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                  onPressed: () async {
-                    final nomorBarcode = _nomorBarcodeController.text;
-                    final namaBarang = _namaBarangController.text;
-                    final jumlahBarang =
-                        int.parse(_jumlahBarangController.text);
-
-                    await _dataBarang.add({
-                      'nomorBarcode': nomorBarcode,
-                      'namaBarang': namaBarang,
-                      'jumlahBarang': jumlahBarang,
-                    });
-
-                    Navigator.pop(context);
-                  },
+                  onPressed: _saveData,
                   child: const Text(
                     'Simpan',
                     style: TextStyle(color: Colors.white),

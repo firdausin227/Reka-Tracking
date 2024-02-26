@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rekatracking/mobilepage.dart';
-import 'package:rekatracking/services/google_sign_in.dart';
+import 'package:rekatracking/services/firebase_services.dart';
 import 'package:rekatracking/webpage.dart';
 
 class LoginPage1 extends StatefulWidget {
@@ -155,7 +155,7 @@ class _LoginPage1State extends State<LoginPage1> {
                     _gap(),
                     IconButton(
                         onPressed: () {
-                          signInWithGoogle();
+                          signInWithGoogle(context);
                         },
                         icon: Image.asset('assets/images/google.png'))
                   ],
@@ -170,46 +170,3 @@ class _LoginPage1State extends State<LoginPage1> {
 
   Widget _gap() => const SizedBox(height: 16);
 }
-
-
-// class LoginPage extends StatelessWidget {
-//   LoginPage({super.key});
-
-//   // TextEditingController emailController = TextEditingController(text: "");
-//   // TextEditingController passwordController = TextEditingController(text: "");
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: Scaffold(
-//         backgroundColor: Colors.blue,
-//         appBar: AppBar(
-//           backgroundColor: Colors.blue,
-//           title: const Text("Login Page"),
-//         ),
-//         body: Center(
-//             child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             ElevatedButton(
-//               child: const Text("Login"),
-//               onPressed: () async {
-//                 //  await AuthServices.signInWithGoogle();
-//                 if (MediaQuery.of(context).size.width < 400) {
-//                   Navigator.pushReplacement(
-//                     context,
-//                     MaterialPageRoute(builder: (context) => const MobilePage()),
-//                   );
-//                 } else {
-//                   Navigator.pushReplacement(
-//                     context,
-//                     MaterialPageRoute(builder: (context) => const WebPage()),
-//                   );
-//                 }
-//               },
-//             ),
-//           ],
-//         )),
-//       ),
-//     );
-//   }
-// }

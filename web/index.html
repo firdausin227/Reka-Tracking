@@ -19,6 +19,7 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
+  <meta name="google-signin-client_id" content="478391684566-o561cm00luuuvflvteshglt3dq89ebqe.apps.googleusercontent.com">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -31,6 +32,26 @@
 
   <title>rekatracking</title>
   <link rel="manifest" href="manifest.json">
+
+  <script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js'
+  import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js'
+  import { getAuth } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
+  import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js'
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBSddXtAb1kApC9PIGAyurS-G6dLXwOCz8",
+    authDomain: "barcodetracking-c86a7.firebaseapp.com",
+    projectId: "barcodetracking-c86a7",
+    storageBucket: "barcodetracking-c86a7.appspot.com",
+    messagingSenderId: "478391684566",
+    appId: "1:478391684566:web:6c1f9d3c75cdc757b6a877"
+  };
+  
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  </script>
 
   <script>
     // The value below is injected by flutter build, do not touch.

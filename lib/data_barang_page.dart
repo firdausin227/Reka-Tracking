@@ -51,8 +51,8 @@ class DataBarangPage extends StatelessWidget {
                     tileColor: Colors.white12,
                     title: Row(
                       children: [
-                        const Text('Nama Barang : '),
-                        Text(data['namaBarang']),
+                        const Text('Nomor Barcode : '),
+                        Text(data['nomorBarcode'].toString()),
                       ],
                     ),
                     subtitle: Column(
@@ -60,8 +60,8 @@ class DataBarangPage extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            const Text('Nomor Barcode : '),
-                            Text(data['nomorBarcode'].toString()),
+                            const Text('Nama Barang : '),
+                            Text(data['namaBarang']),
                           ],
                         ),
                         Row(
