@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rekatracking/services/firebase_services.dart';
-import 'package:rekatracking/webpage.dart';
+import 'package:rekatracking/view/web/webpage.dart';
 
 class TambahBarangPage extends StatefulWidget {
   const TambahBarangPage({super.key});
@@ -12,17 +11,14 @@ class TambahBarangPage extends StatefulWidget {
 }
 
 class _TambahBarangState extends State<TambahBarangPage> {
-  final CollectionReference _dataBarang =
-      FirebaseFirestore.instance.collection('barang');
-
   final _nomorBarcodeController = TextEditingController();
   final _namaBarangController = TextEditingController();
   final _jumlahBarangController = TextEditingController();
-  final TextEditingController _date = TextEditingController();
+  final _date = TextEditingController();
   final statusProsesBarang = TextEditingController();
   final _keteranganBarangController = TextEditingController();
 
-  String? _selectedStatusBarang;
+  String? _selectedStatus;
 
   @override
   void dispose() {
@@ -39,20 +35,30 @@ class _TambahBarangState extends State<TambahBarangPage> {
     final namaBarang = _namaBarangController.text;
     final jumlahBarang = int.parse(_jumlahBarangController.text);
     final keteranganBarang = _keteranganBarangController.text;
-    final statusProsesBarang = _selectedStatusBarang!;
+    final statusProsesBarang = _selectedStatus;
     final tanggalTarget = _date.text;
 
-    await FirebaseService().addBarang(
-      nomorBarcode,
-      namaBarang,
-      jumlahBarang,
-      keteranganBarang,
-      statusProsesBarang,
-      tanggalTarget,
-    );
+    if (_selectedStatus != null) {
+      try {
+        await FirebaseFirestore.instance.collection('barang').add({
+          'nomorBarcode': nomorBarcode,
+          'namaBarang': namaBarang,
+          'jumlahBarang': jumlahBarang,
+          'keteranganBarang': keteranganBarang,
+          'statusProsesBarang': _selectedStatus,
+          'tanggalTarget': tanggalTarget,
+        });
 
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const WebPage()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const WebPage()),
+        );
+      } catch (e) {
+        print('Error saving data: $e');
+      }
+    } else {
+      print('Selected status is null!');
+    }
   }
 
   @override
@@ -80,6 +86,7 @@ class _TambahBarangState extends State<TambahBarangPage> {
           children: [
             // Form Kode Barcode
             TextFormField(
+              controller: _nomorBarcodeController,
               decoration: const InputDecoration(
                   labelText: 'Kode Barcode',
                   hintText: 'Input Kode Barcode',
@@ -91,6 +98,7 @@ class _TambahBarangState extends State<TambahBarangPage> {
             // Form Nama Barang
             const SizedBox(height: 16),
             TextFormField(
+              controller: _namaBarangController,
               decoration: const InputDecoration(
                   labelText: 'Nama Barang',
                   hintText: 'Input Nama Barang',
@@ -102,6 +110,7 @@ class _TambahBarangState extends State<TambahBarangPage> {
             // Form Jumlah Barang
             const SizedBox(height: 16),
             TextFormField(
+              controller: _jumlahBarangController,
               decoration: const InputDecoration(
                   labelText: 'Jumlah Barang',
                   hintText: 'Input Jumlah Barang',
@@ -114,7 +123,7 @@ class _TambahBarangState extends State<TambahBarangPage> {
             const SizedBox(height: 16),
             SizedBox(
                 width: MediaQuery.of(context).size.width,
-                child: const SimpleDropDown()),
+                child: const StatusBarangDropDown()),
 
             // Form Tanggal Target
             const SizedBox(height: 16),
@@ -144,6 +153,7 @@ class _TambahBarangState extends State<TambahBarangPage> {
             // Form Keterangan Barang
             const SizedBox(height: 16),
             TextFormField(
+              controller: _keteranganBarangController,
               decoration: const InputDecoration(
                   labelText: 'Keterangan Barang',
                   hintText: 'Input Keterangan Barang',
@@ -190,33 +200,55 @@ class _TambahBarangState extends State<TambahBarangPage> {
   }
 }
 
-class SimpleDropDown extends StatefulWidget {
-  const SimpleDropDown({super.key});
+class StatusBarangDropDown extends StatefulWidget {
+  const StatusBarangDropDown({super.key});
 
   @override
-  State<SimpleDropDown> createState() => _SimpleDropDownState();
+  _StatusBarangDropDownState createState() => _StatusBarangDropDownState();
 }
 
-class _SimpleDropDownState extends State<SimpleDropDown> {
-  String? _selectedStatusBarang;
-  final List<String> _status = [
-    'Perencanaan Produksi',
-    'Pengendalian Produksi',
-    'Gudang',
-    'Produksi Mekanik',
-    'QC (In-Proccess)',
-    'Produksi Elektrik',
-    'QC (Final)',
-    'Ekspedisi',
-    'AfterSales',
-  ];
+class _StatusBarangDropDownState extends State<StatusBarangDropDown> {
+  String? _selectedStatus;
+  List<String> _statusOptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getStatusOptions();
+  }
+
+  Future<void> _getStatusOptions() async {
+    try {
+      // Ambil data dari koleksi 'statusProsesBarang'
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('statusProsesBarang')
+          .get();
+
+      // Ubah data Firestore menjadi list string
+      List<String> statusList = querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .map((data) => data['status'] as String?)
+          .where((status) => status != null)
+          .cast<String>()
+          .toList();
+
+      // Perbarui state dengan data yang diperoleh
+      setState(() {
+        _statusOptions = statusList;
+      });
+    } catch (error) {
+      // Tangani kesalahan jika terjadi
+      print('Error fetching status options: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      value: _selectedStatusBarang,
+      value: _selectedStatus,
       onChanged: (String? newValue) {
         setState(() {
-          _selectedStatusBarang = newValue;
+          _selectedStatus = newValue;
         });
       },
       decoration: const InputDecoration(
@@ -225,7 +257,7 @@ class _SimpleDropDownState extends State<SimpleDropDown> {
         filled: true,
         fillColor: Colors.white,
       ),
-      items: _status
+      items: _statusOptions
           .map((status) => DropdownMenuItem<String>(
                 value: status,
                 child: Text(status),

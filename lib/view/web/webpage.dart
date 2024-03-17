@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rekatracking/data_barang_page.dart';
-import 'package:rekatracking/laporan_page.dart';
-import 'package:rekatracking/screens/loginpage.dart';
-import 'package:rekatracking/beranda_page.dart';
+import 'package:rekatracking/view/web/data_barang_page.dart';
+import 'package:rekatracking/view/web/laporan_page.dart';
+import 'package:rekatracking/loginpage.dart';
+import 'package:rekatracking/view/web/beranda_page.dart';
 
 class WebPage extends StatefulWidget {
   const WebPage({super.key});
@@ -35,7 +35,7 @@ class _WebPageState extends State<WebPage> {
     final bool isLargeScreen = width > 800;
 
     return Theme(
-      data: ThemeData.dark(),
+      data: ThemeData.light(),
       child: Scaffold(
         backgroundColor: Colors.blue,
         key: _scaffoldKey,

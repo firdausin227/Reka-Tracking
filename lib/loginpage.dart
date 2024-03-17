@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rekatracking/mobilepage.dart';
 import 'package:rekatracking/services/firebase_services.dart';
-import 'package:rekatracking/webpage.dart';
+import 'package:rekatracking/view/web/webpage.dart';
 
 class LoginPage1 extends StatefulWidget {
   const LoginPage1({super.key});

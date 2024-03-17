@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -5,7 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rekatracking/mobilepage.dart';
-import 'package:rekatracking/webpage.dart';
+import 'package:rekatracking/view/web/webpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 
@@ -28,6 +29,29 @@ Future<User?> signInWithGoogle(BuildContext context) async {
       user = userCredential.user;
     } catch (e) {
       print(e);
+    }
+  } else if (Platform.isAndroid) {
+    GoogleSignIn googleSignIn = GoogleSignIn();
+
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+    if (googleUser != null) {
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      try {
+        final UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+
+        user = userCredential.user;
+      } catch (e) {
+        print(e);
+      }
     }
   }
   if (user != null) {
@@ -69,9 +93,6 @@ class FirebaseService {
   DatabaseReference get databaseRef => FirebaseDatabase.instance.reference();
 
   initializeApp({required FirebaseOptions options}) {}
-
-  // Mengambil instance Firestore
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Method untuk menulis data baru
   Future<void> addBarang(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:rekatracking/screens/loginpage.dart';
+import 'package:rekatracking/loginpage.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 class MobilePage extends StatefulWidget {
